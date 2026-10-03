@@ -7,7 +7,7 @@ from typing import Any, Awaitable, Callable
 from openai import AsyncOpenAI
 
 from .config import load_config
-from .cost import estimate_astra_cost
+from .cost import estimate_model_cost
 from .db import Blackboard
 from .extensions import ExtensionRegistry
 from .models import AgentResult, Usage
@@ -129,7 +129,7 @@ class OpenAIResearchRunner:
                 final_text_parts.append(streamed_text)
 
             inp, cached, out = _usage(response)
-            cost = estimate_astra_cost(inp, cached, out)
+            cost = estimate_model_cost(model, inp, cached, out)
             total_usage.input_tokens += inp
             total_usage.cached_input_tokens += cached
             total_usage.output_tokens += out

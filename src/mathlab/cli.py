@@ -28,7 +28,12 @@ def init(name: str, handoff: Path = typer.Argument(..., exists=True, readable=Tr
 
 
 @app.command()
-def go(project: Path = typer.Argument(Path(".")), headless: bool = typer.Option(False, "--headless")) -> None:
+def go(
+    project: Path = typer.Argument(Path(".")),
+    headless: bool = typer.Option(False, "--headless"),
+    model: str | None = typer.Option(None, "--model", help="Use this model for this run without editing mathlab.toml."),
+    debug: bool = typer.Option(False, "--debug", help="Use the constrained low-cost debug profile."),
+) -> None:
     """Start/resume autonomous research, with the TUI by default."""
     project = project.resolve()
     if not (project / "HANDOFF.md").exists():
@@ -36,6 +41,10 @@ def go(project: Path = typer.Argument(Path(".")), headless: bool = typer.Option(
     if not os.environ.get("OPENAI_API_KEY"):
         console.print("[red]OPENAI_API_KEY is not set.[/red]")
         raise typer.Exit(2)
+    if debug:
+        os.environ["MATHLAB_DEBUG"] = "1"
+    if model:
+        os.environ["MATHLAB_MODEL"] = model
     if headless:
         orch = Orchestrator(project, _headless_log)
         asyncio.run(orch.run())

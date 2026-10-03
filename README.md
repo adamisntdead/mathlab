@@ -216,6 +216,20 @@ director_reasoning = "high"
 verifier_reasoning = "max"
 ra_reasoning = "high"
 
+# One-off overrides: `mathlab go --model gpt-5.4-mini`.
+# `mathlab go --debug` uses this constrained, inexpensive profile.
+[debug]
+enabled = false
+model = "gpt-5.4-mini"
+reasoning = "low"
+max_agents = 1
+budget_usd = 2.0
+max_epochs = 1
+tasks_per_epoch = 1
+worker_turn_limit = 3
+enable_web_search = false
+ra_enabled = false
+
 [research]
 max_agents = 6
 budget_usd = 200.0
@@ -229,8 +243,10 @@ shell_max_output = 32000
 enable_web_search = true
 ```
 
-The spend shown in the TUI is an estimate from token usage using the Astra prices current when this release was
-built. Your OpenAI dashboard remains the source of truth for billing.
+Use `--model` for a one-run switch, or change `[model].name` to make it permanent. `--debug` is intended for
+end-to-end smoke tests: it selects `gpt-5.4-mini` at low reasoning, runs only one small agent pass, and disables
+web search and the framework engineer. The spend shown in the TUI is an estimate for Astra and the bundled debug
+model; your OpenAI dashboard remains the source of truth for billing.
 
 ## Project layout
 
