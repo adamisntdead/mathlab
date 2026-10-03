@@ -9,6 +9,7 @@ def estimate_model_cost(model: str, input_tokens: int, cached_tokens: int, outpu
     """
     prices = {
         "gpt-6-astra": (10, 1, 50),
+        "gpt-6-luna": (0.10, 0.01, 0.50),
         "gpt-5.4-mini": (0.75, 0.075, 4.5),
     }
     input_price, cached_price, output_price = prices.get(model, prices["gpt-6-astra"])

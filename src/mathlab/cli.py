@@ -32,7 +32,7 @@ def go(
     project: Path = typer.Argument(Path(".")),
     headless: bool = typer.Option(False, "--headless"),
     model: str | None = typer.Option(None, "--model", help="Use this model for this run without editing mathlab.toml."),
-    debug: bool = typer.Option(False, "--debug", help="Use the constrained low-cost debug profile."),
+    debug: bool = typer.Option(False, "--debug", help="Use the low-cost debug model profile."),
 ) -> None:
     """Start/resume autonomous research, with the TUI by default."""
     project = project.resolve()
