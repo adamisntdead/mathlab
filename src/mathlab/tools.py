@@ -53,8 +53,8 @@ def research_tools(include_ra: bool = False, include_verifier: bool = False) -> 
             "title": {"type": "string"}, "description": {"type": "string"}, "acceptance_test": {"type": "string"}
         }, ["title", "description", "acceptance_test"]),
         function_tool("list_capabilities", "List project-local hot-added RA extension tools.", {}, []),
-        function_tool("run_extension", "Run a named hot-added project extension with JSON arguments.", {
-            "name": {"type": "string"}, "args": {"type": "object", "additionalProperties": True}
+        function_tool("run_extension", "Run a named hot-added project extension. Pass its JSON object arguments as a JSON-encoded string in args.", {
+            "name": {"type": "string"}, "args": {"type": "string"}
         }, ["name", "args"]),
     ]
     if include_verifier:
@@ -131,7 +131,13 @@ class ToolRouter:
         if name == "list_capabilities":
             return {"tools": self.extensions.tools()}
         if name == "run_extension":
-            return await self.extensions.run(args["name"], args["args"])
+            try:
+                extension_args = json.loads(args["args"])
+            except json.JSONDecodeError:
+                return {"ok": False, "error": "Extension args must be a valid JSON object string."}
+            if not isinstance(extension_args, dict):
+                return {"ok": False, "error": "Extension args must decode to a JSON object."}
+            return await self.extensions.run(args["name"], extension_args)
         if name == "review_claim":
             if self.role != "verifier":
                 return {"ok": False, "error": "Only verifier agents can record independent review verdicts."}
