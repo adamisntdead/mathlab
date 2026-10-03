@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mathlab-ai"
+version = "0.1.0"
+description = "A persistent, multi-agent research lab for open-ended mathematics using OpenAI reasoning models."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "MathLab"}]
+dependencies = [
+  "openai>=2.8.0",
+  "textual>=1.0.0",
+  "typer>=0.12.5",
+  "rich>=13.9.0",
+  "pydantic>=2.9.0",
+  "pypdf>=5.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.24", "ruff>=0.8"]
+
+[project.scripts]
+mathlab = "mathlab.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mathlab"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
